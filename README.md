@@ -29,7 +29,20 @@ In development, if beta credentials are not configured, the auth gate is bypasse
 
 - `app/page.tsx` renders the Maria workstation UI.
 - `config/agents.ts` is the public capability registry.
+- `app/api/health/route.ts` reports safe deployment health and bridge readiness without exposing secrets.
 - `app/api/maria/chat/route.ts` is the future server-side bridge to Maria in NemoClaw/Brev.
 - `proxy.ts` protects the beta app with server-side Basic Auth.
 
 Secrets must stay in Vercel environment variables. Do not expose OpenClaw, Brev, NVIDIA, or MCP tokens in browser code.
+
+## Safe Verification
+
+After each deploy, verify the protected UI and health endpoint:
+
+```powershell
+$pair='anastacio:your-password'
+$basic=[Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($pair))
+Invoke-WebRequest -UseBasicParsing -Uri 'https://researchworkstation-com-v2.vercel.app/api/health' -Headers @{Authorization="Basic $basic"}
+```
+
+The health endpoint may report whether the OpenClaw bridge is configured, but it must never print tokens.

@@ -11,6 +11,7 @@ The app currently provides:
 - Beta login protection using server-side Basic Auth.
 - A configurable agent/capability registry.
 - Placeholder server-side API routes for Maria, agents, and artifacts.
+- A safe `/api/health` endpoint for deployment checks without exposing secrets.
 - A Vercel preview deployment for safe online testing.
 - Persistent Vercel environment variables for the temporary `vercel.app` production deployment.
 
@@ -114,6 +115,7 @@ Vercel preview:
 - Maria UI renders.
 - `/api/agents/registry` responds behind login.
 - `/api/maria/chat` responds with safe placeholder behavior behind login.
+- `/api/health` reports deployment state without exposing tokens.
 - `.env.local` is not exposed.
 
 Latest Vercel redeploy:
