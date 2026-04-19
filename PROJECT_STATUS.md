@@ -55,6 +55,22 @@ anastacios-projects-481225da/researchworkstation-com-v2
 
 The real domain `researchworkstation.com` has not been moved to this app yet.
 
+## GitHub
+
+Remote repository:
+
+```text
+https://github.com/asilveira1969/researchworkstation.com.git
+```
+
+The local `main` branch tracks `origin/main`.
+
+The preview baseline tag has been pushed:
+
+```text
+v0.1.0-preview
+```
+
 ## Security Notes
 
 Do not commit:
@@ -88,10 +104,12 @@ Vercel preview:
 
 Git:
 - Local branch is `main`.
-- Stable local tag is `v0.1.0-preview`.
+- Remote branch is `origin/main`.
+- Stable local/remote tag is `v0.1.0-preview`.
 - Stable commits exist:
 
 ```text
+2e4834a Record preview release tag
 dc1e8cf Record main branch status
 86313d1 Document preview deployment status
 6a96c0a Initial Maria workstation preview
@@ -103,7 +121,7 @@ Recommended order:
 - Review the Vercel preview visually.
 - Improve responsive layout and workstation fidelity if needed.
 - Replace beta password with a stronger private value before production.
-- Prepare a GitHub remote when ready.
+- Keep GitHub updated after each safe milestone.
 - Only after preview approval, associate `researchworkstation.com`.
 - Later, implement the server-side bridge from Vercel to Maria in Brev/NemoClaw.
 
