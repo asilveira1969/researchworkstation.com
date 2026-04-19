@@ -88,9 +88,11 @@ Vercel preview:
 
 Git:
 - Local branch is `main`.
+- Stable local tag is `v0.1.0-preview`.
 - Stable commits exist:
 
 ```text
+dc1e8cf Record main branch status
 86313d1 Document preview deployment status
 6a96c0a Initial Maria workstation preview
 ```
