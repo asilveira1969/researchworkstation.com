@@ -12,6 +12,7 @@ The app currently provides:
 - A configurable agent/capability registry.
 - Placeholder server-side API routes for Maria, agents, and artifacts.
 - A Vercel preview deployment for safe online testing.
+- Persistent Vercel environment variables for the temporary `vercel.app` production deployment.
 
 The previous folders and deployments are intentionally untouched:
 - `C:\Users\pc\researchworkstation.com`
@@ -45,6 +46,12 @@ Preview URL:
 
 ```text
 https://researchworkstation-com-v2.vercel.app
+```
+
+Latest redeploy inspect URL:
+
+```text
+https://vercel.com/anastacios-projects-481225da/researchworkstation-com-v2/22yfQUkEiqnosLJwaSwkS8xern5K
 ```
 
 Vercel project:
@@ -86,6 +93,11 @@ Current beta login values are stored outside Git in local/Vercel environment con
 
 The browser must never receive OpenClaw, Brev, NVIDIA, MCP, or other provider tokens.
 
+Vercel environment notes:
+- `RW_BETA_USERNAME`, `RW_BETA_PASSWORD`, `RW_SESSION_SECRET`, and `MARIA_DEFAULT_SESSION` are stored in Vercel for the temporary production deployment.
+- Preview branch-scoped env vars are not available yet because the Vercel project is not connected to a Git repository in the Vercel dashboard.
+- Before attaching `researchworkstation.com`, replace the beta test password and session secret with stronger private values.
+
 ## Verified
 
 Local:
@@ -101,6 +113,13 @@ Vercel preview:
 - `/api/agents/registry` responds behind login.
 - `/api/maria/chat` responds with safe placeholder behavior behind login.
 - `.env.local` is not exposed.
+
+Latest Vercel redeploy:
+- Clean deploy completed using persistent Vercel env vars instead of command-line `--env` flags.
+- Unauthenticated request returned `401`.
+- Correct beta login returned `200`.
+- Incorrect beta password returned `401`.
+- The alias remains `https://researchworkstation-com-v2.vercel.app`.
 
 Git:
 - Local branch is `main`.
@@ -119,6 +138,7 @@ dc1e8cf Record main branch status
 
 Recommended order:
 - Review the Vercel preview visually.
+- Connect the Vercel project to GitHub from the Vercel dashboard when ready, so preview env vars can be branch-scoped cleanly.
 - Improve responsive layout and workstation fidelity if needed.
 - Replace beta password with a stronger private value before production.
 - Keep GitHub updated after each safe milestone.
