@@ -87,9 +87,11 @@ Vercel preview:
 - `.env.local` is not exposed.
 
 Git:
-- Initial stable commit exists:
+- Local branch is `main`.
+- Stable commits exist:
 
 ```text
+86313d1 Document preview deployment status
 6a96c0a Initial Maria workstation preview
 ```
 
