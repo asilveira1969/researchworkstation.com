@@ -95,7 +95,9 @@ The browser must never receive OpenClaw, Brev, NVIDIA, MCP, or other provider to
 
 Vercel environment notes:
 - `RW_BETA_USERNAME`, `RW_BETA_PASSWORD`, `RW_SESSION_SECRET`, and `MARIA_DEFAULT_SESSION` are stored in Vercel for the temporary production deployment.
-- Preview branch-scoped env vars are not available yet because the Vercel project is not connected to a Git repository in the Vercel dashboard.
+- The Vercel project is connected to GitHub repository `asilveira1969/researchworkstation.com`.
+- The `main` branch is treated as the production branch by Vercel, so beta login variables must exist in the Vercel Production environment for pushes to `main`.
+- Preview env vars are for non-production branches or pull requests; Vercel does not allow `main` to be configured as a Preview branch.
 - Before attaching `researchworkstation.com`, replace the beta test password and session secret with stronger private values.
 
 ## Verified
@@ -124,6 +126,7 @@ Latest Vercel redeploy:
 Git:
 - Local branch is `main`.
 - Remote branch is `origin/main`.
+- Vercel Git integration is connected to `asilveira1969/researchworkstation.com`.
 - Stable local/remote tag is `v0.1.0-preview`.
 - Stable commits exist:
 
@@ -138,7 +141,6 @@ dc1e8cf Record main branch status
 
 Recommended order:
 - Review the Vercel preview visually.
-- Connect the Vercel project to GitHub from the Vercel dashboard when ready, so preview env vars can be branch-scoped cleanly.
 - Improve responsive layout and workstation fidelity if needed.
 - Replace beta password with a stronger private value before production.
 - Keep GitHub updated after each safe milestone.
