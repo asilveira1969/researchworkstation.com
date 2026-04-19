@@ -4,6 +4,8 @@ Official Vercel-ready workstation app for `researchworkstation.com`.
 
 This project recreates the Maria workstation experience from the local OpenClaw prototype without depending on local `.openclaw` paths, browser-visible gateway tokens, or `127.0.0.1` services.
 
+Current operational notes live in [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).
+
 ## Local Development
 
 1. Copy `.env.example` to `.env.local`.
