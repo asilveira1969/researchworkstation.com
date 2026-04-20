@@ -10,6 +10,7 @@ The app currently provides:
 - Maria workstation UI inspired by the existing OpenClaw prototype.
 - Beta login protection using server-side Basic Auth.
 - A configurable `capability-registry-v1` with pre-job, job-required, and artifact-access modes.
+- `job-system-v1` placeholder APIs for public `jobId` creation and workflow traceability.
 - Placeholder server-side API routes for Maria, agents, and artifacts.
 - A safe `/api/health` endpoint for deployment checks without exposing secrets.
 - Master documentation for the agentic architecture and capability map.
@@ -122,8 +123,9 @@ Vercel preview:
 - Correct beta login returns `200`.
 - Maria UI renders.
 - `/api/agents/registry` responds behind login with `capability-registry-v1`.
+- `/api/jobs` creates public job references like `RW-YYYYMMDD-0001` for job-required capabilities.
 - `/api/maria/chat` responds with safe placeholder behavior behind login.
-- `/api/health` reports deployment and capability state without exposing tokens.
+- `/api/health` reports deployment, capability state, and job-system readiness without exposing tokens.
 - Agentic architecture docs exist and contain no secrets.
 - `.env.local` is not exposed.
 
@@ -153,6 +155,7 @@ dc1e8cf Record main branch status
 Recommended order:
 - Review the Vercel preview visually.
 - Use `AGENTIC_ARCHITECTURE.md` and `AGENT_MAP.md` as the source of truth before adding real agents, tools, workflows, storage, or Maria bridge behavior.
+- Replace Job System v1 in-memory storage with durable storage before any real long-running agent workflow.
 - Improve responsive layout and workstation fidelity if needed.
 - Replace beta password with a stronger private value before production.
 - Keep GitHub updated after each safe milestone.

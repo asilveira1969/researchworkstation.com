@@ -242,6 +242,21 @@ textarea {
   color: rgba(15, 31, 56, 0.7);
 }
 
+.settings-bar .job-chip {
+  border: 1px solid rgba(15, 31, 56, 0.12);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.34);
+  color: rgba(15, 31, 56, 0.58);
+  white-space: nowrap;
+}
+
+.settings-bar .job-chip.active {
+  border-color: rgba(228, 0, 43, 0.28);
+  background: rgba(228, 0, 43, 0.08);
+  color: var(--brand-deep);
+}
+
 .conversation-panel {
   padding: 0 20px 28px;
   overflow: auto;

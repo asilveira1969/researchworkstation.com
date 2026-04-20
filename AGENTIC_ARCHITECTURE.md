@@ -143,6 +143,8 @@ Expected job statuses:
 
 `/api/maria/chat` should remain the fast path for Maria conversation and pre-job guidance. Heavy workflows should use asynchronous jobs so agents have room to work without forcing the browser to wait on long operations.
 
+Job System v1 is implemented as `/api/jobs` with temporary in-process storage. It is useful for testing the public `jobId` contract and UI behavior, but it is not durable. Before real agent workflows run, this must move to durable storage so jobs survive deployments, serverless instance changes, browser reloads, and long-running workflows.
+
 ## Output Types
 
 The chat is the primary user experience, but not the only output destination.

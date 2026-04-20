@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { agentCapabilities, mariaAgent } from "@/config/agents";
 import { isBetaAuthConfigured } from "@/lib/auth";
+import { listJobs } from "@/lib/jobs";
 
 export async function GET() {
   const gatewayUrl = process.env.OPENCLAW_GATEWAY_URL?.trim() || "";
   const gatewayToken = process.env.OPENCLAW_GATEWAY_TOKEN?.trim() || "";
   const mariaDefaultSession = process.env.MARIA_DEFAULT_SESSION?.trim() || mariaAgent.sessionKey;
+  const jobs = listJobs();
 
   return NextResponse.json({
     status: "ok",
@@ -34,6 +36,11 @@ export async function GET() {
       createsJob: agentCapabilities.filter((capability) => capability.createsJob).length,
       preJob: agentCapabilities.filter((capability) => capability.executionMode === "pre_job").length,
       artifactAccess: agentCapabilities.filter((capability) => capability.executionMode === "artifact_access").length,
+    },
+    jobs: {
+      schemaVersion: "job-system-v1",
+      storage: "ephemeral-memory-placeholder",
+      currentProcessJobs: jobs.length,
     },
   });
 }

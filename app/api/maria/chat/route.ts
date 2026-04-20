@@ -5,6 +5,7 @@ type MariaChatRequest = {
   message?: string;
   sessionId?: string;
   agentId?: string;
+  jobId?: string;
 };
 
 export async function POST(request: Request) {
@@ -26,12 +27,15 @@ export async function POST(request: Request) {
   const gatewayToken = process.env.OPENCLAW_GATEWAY_TOKEN?.trim();
 
   if (!gatewayUrl || !gatewayToken) {
+    const jobReference = body.jobId ? ` Job ${body.jobId} is now the traceable reference for this workflow.` : "";
+
     return NextResponse.json({
       status: "prepared",
       agentId: body.agentId || mariaAgent.id,
       sessionId: body.sessionId || mariaAgent.sessionKey,
+      jobId: body.jobId || null,
       reply:
-        "Maria is installed in the Research Workstation interface. The secure NemoClaw bridge is prepared but not connected in this deployment yet.",
+        `Maria is installed in the Research Workstation interface.${jobReference} The secure NemoClaw bridge is prepared but not connected in this deployment yet.`,
       metadata: {
         bridge: "not_configured",
         runtime: "brev-nvidia-nemoclaw",
@@ -43,8 +47,11 @@ export async function POST(request: Request) {
     status: "prepared",
     agentId: body.agentId || mariaAgent.id,
     sessionId: body.sessionId || process.env.MARIA_DEFAULT_SESSION || mariaAgent.sessionKey,
+    jobId: body.jobId || null,
     reply:
-      "The secure bridge environment variables are present. Live OpenClaw WebSocket relay will be implemented after the first protected Vercel release is validated.",
+      `The secure bridge environment variables are present.${
+        body.jobId ? ` Job ${body.jobId} is ready for traceable execution.` : ""
+      } Live OpenClaw WebSocket relay will be implemented after the first protected Vercel release is validated.`,
     metadata: {
       bridge: "configured_not_relaying",
       gatewayHost: new URL(gatewayUrl).host,

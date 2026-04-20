@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { getCapabilitiesByGroup, mariaAgent, type AgentCapability } from "@/config/agents";
+import { getCapabilitiesByGroup, getCapabilityById, mariaAgent, type AgentCapability } from "@/config/agents";
 
 const statusLabels = {
   live: "Live",
@@ -18,6 +18,13 @@ const executionModeLabels = {
 type ChatMessage = {
   role: "user" | "maria";
   text: string;
+};
+
+type CurrentJob = {
+  jobId: string;
+  capabilityId: string;
+  capabilityLabel: string;
+  status: string;
 };
 
 function RailButton({
@@ -46,7 +53,7 @@ function RailButton({
       {capability.eyebrow ? <span>{capability.eyebrow}</span> : null}
       <strong>{capability.label}</strong>
       <em>
-        {statusLabels[capability.status]} · {executionModeLabels[capability.executionMode]}
+        {statusLabels[capability.status]} - {executionModeLabels[capability.executionMode]}
       </em>
     </button>
   );
@@ -72,13 +79,14 @@ export function MariaWorkstation() {
     },
   ]);
   const [status, setStatus] = useState("Ready for beta workflow");
+  const [currentJob, setCurrentJob] = useState<CurrentJob | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function selectCapability(capability: AgentCapability) {
     setSelectedAgentId(capability.id);
     setPrompt(capability.prompt);
     setStatus(
-      `${capability.label} selected · ${executionModeLabels[capability.executionMode]} · ${
+      `${capability.label} selected - ${executionModeLabels[capability.executionMode]} - ${
         capability.createsJob ? "job starts only after confirmation" : "no job created by navigation"
       }`,
     );
@@ -94,6 +102,7 @@ export function MariaWorkstation() {
           "New session prepared. Tell me the decision, market, company, or question you want to research, and I will help structure the work.",
       },
     ]);
+    setCurrentJob(null);
     setStatus("New Maria session prepared");
   }
 
@@ -102,10 +111,46 @@ export function MariaWorkstation() {
     if (!message || isPending) return;
 
     setMessages((current) => [...current, { role: "user", text: message }]);
-    setStatus("Sending to secure Maria bridge");
+    setStatus("Preparing secure Maria workflow");
 
     startTransition(async () => {
       try {
+        const selectedCapability = getCapabilityById(selectedAgentId);
+        let jobId: string | undefined;
+
+        if (selectedCapability?.createsJob) {
+          setStatus("Creating traceable job");
+
+          const jobResponse = await fetch("/api/jobs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              capabilityId: selectedCapability.id,
+              userMessage: message,
+              sessionId: mariaAgent.sessionKey,
+            }),
+          });
+
+          const jobPayload = (await jobResponse.json()) as {
+            job?: CurrentJob;
+            message?: string;
+          };
+
+          if (!jobResponse.ok || !jobPayload.job) {
+            throw new Error(jobPayload.message || "Job creation failed.");
+          }
+
+          jobId = jobPayload.job.jobId;
+          setCurrentJob({
+            jobId: jobPayload.job.jobId,
+            capabilityId: jobPayload.job.capabilityId,
+            capabilityLabel: jobPayload.job.capabilityLabel,
+            status: jobPayload.job.status,
+          });
+        }
+
+        setStatus(jobId ? `Job ${jobId} created - sending to Maria` : "Sending to secure Maria bridge");
+
         const response = await fetch("/api/maria/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -113,12 +158,13 @@ export function MariaWorkstation() {
             message,
             agentId: selectedAgentId,
             sessionId: mariaAgent.sessionKey,
+            jobId,
           }),
         });
         const payload = (await response.json()) as { reply?: string; message?: string };
         const reply = payload.reply || payload.message || "Maria bridge responded without text.";
         setMessages((current) => [...current, { role: "maria", text: reply }]);
-        setStatus("Maria response received");
+        setStatus(jobId ? `Maria response received for ${jobId}` : "Maria response received");
       } catch {
         setMessages((current) => [
           ...current,
@@ -128,7 +174,7 @@ export function MariaWorkstation() {
               "The local interface is ready, but the secure Maria bridge could not be reached. Check the deployment environment before live use.",
           },
         ]);
-        setStatus("Bridge unavailable");
+        setStatus("Workflow unavailable");
       }
     });
   }
@@ -157,6 +203,9 @@ export function MariaWorkstation() {
 
         <div className="settings-bar" aria-label="Gateway status">
           <span>{status}</span>
+          <strong className={currentJob ? "job-chip active" : "job-chip"}>
+            {currentJob ? `Current Job: ${currentJob.jobId}` : "Pre-job mode"}
+          </strong>
           <strong>Vercel front door</strong>
           <span>NemoClaw bridge prepared server-side</span>
         </div>

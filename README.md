@@ -33,11 +33,14 @@ In development, if beta credentials are not configured, the auth gate is bypasse
 - `config/agents.ts` is the agentic capability registry.
 - `app/api/health/route.ts` reports safe deployment health and bridge readiness without exposing secrets.
 - `app/api/maria/chat/route.ts` is the future server-side bridge to Maria in NemoClaw/Brev.
+- `app/api/jobs/route.ts` creates traceable placeholder jobs with public `jobId` values before real agent execution is connected.
 - `proxy.ts` protects the beta app with server-side Basic Auth.
 - `AGENTIC_ARCHITECTURE.md` defines the Vercel/NVIDIA/Brev/NemoClaw architecture, job rules, output model, and security boundaries.
 - `AGENT_MAP.md` maps the current UI buttons to future agentic capabilities.
 
 The capability registry distinguishes pre-job guidance, job-required workflows, and artifact access. Navigation does not create jobs; operational work does.
+
+Job System v1 uses temporary in-process storage so the UI/API contract can be tested safely. Durable storage will replace it before production agent workflows generate reusable reports, PDFs, datasets, or evidence maps.
 
 Secrets must stay in Vercel environment variables. Do not expose OpenClaw, Brev, NVIDIA, or MCP tokens in browser code.
 
