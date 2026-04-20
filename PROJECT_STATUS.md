@@ -9,7 +9,7 @@ Research Workstation v2 is a new Vercel-ready Next.js app for the official `rese
 The app currently provides:
 - Maria workstation UI inspired by the existing OpenClaw prototype.
 - Beta login protection using server-side Basic Auth.
-- A configurable agent/capability registry.
+- A configurable `capability-registry-v1` with pre-job, job-required, and artifact-access modes.
 - Placeholder server-side API routes for Maria, agents, and artifacts.
 - A safe `/api/health` endpoint for deployment checks without exposing secrets.
 - Master documentation for the agentic architecture and capability map.
@@ -121,9 +121,9 @@ Vercel preview:
 - Unauthenticated request returns `401`.
 - Correct beta login returns `200`.
 - Maria UI renders.
-- `/api/agents/registry` responds behind login.
+- `/api/agents/registry` responds behind login with `capability-registry-v1`.
 - `/api/maria/chat` responds with safe placeholder behavior behind login.
-- `/api/health` reports deployment state without exposing tokens.
+- `/api/health` reports deployment and capability state without exposing tokens.
 - Agentic architecture docs exist and contain no secrets.
 - `.env.local` is not exposed.
 

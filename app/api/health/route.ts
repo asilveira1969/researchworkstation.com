@@ -31,6 +31,9 @@ export async function GET() {
       live: agentCapabilities.filter((capability) => capability.status === "live").length,
       prepared: agentCapabilities.filter((capability) => capability.status === "prepared").length,
       future: agentCapabilities.filter((capability) => capability.status === "future").length,
+      createsJob: agentCapabilities.filter((capability) => capability.createsJob).length,
+      preJob: agentCapabilities.filter((capability) => capability.executionMode === "pre_job").length,
+      artifactAccess: agentCapabilities.filter((capability) => capability.executionMode === "artifact_access").length,
     },
   });
 }

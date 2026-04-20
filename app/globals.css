@@ -130,6 +130,18 @@ textarea {
   opacity: 0.72;
 }
 
+.rail-button.job_required {
+  outline: 1px solid rgba(228, 0, 43, 0.22);
+}
+
+.rail-button.artifact_access {
+  outline: 1px solid rgba(40, 199, 104, 0.24);
+}
+
+.rail-button.pre_job {
+  outline: 1px solid rgba(255, 244, 230, 0.18);
+}
+
 .maria-console {
   min-height: calc(100vh - 48px);
   display: grid;

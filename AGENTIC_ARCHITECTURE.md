@@ -116,6 +116,8 @@ Example:
 
 ## Future Workflow Contract
 
+The capability registry in `config/agents.ts` is the first technical source of truth for UI buttons and future workflow routing. Each capability declares whether it is pre-job guidance, job-required work, or artifact access.
+
 Future workflow APIs should use a minimal shared contract:
 
 ```json

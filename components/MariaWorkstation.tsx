@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { agentCapabilities, getCapabilitiesByGroup, mariaAgent, type AgentCapability } from "@/config/agents";
+import { getCapabilitiesByGroup, mariaAgent, type AgentCapability } from "@/config/agents";
 
 const statusLabels = {
   live: "Live",
   prepared: "Prepared",
   future: "Future",
+};
+
+const executionModeLabels = {
+  pre_job: "Guide",
+  job_required: "Creates Job",
+  artifact_access: "Artifacts",
 };
 
 type ChatMessage = {
@@ -21,18 +27,27 @@ function RailButton({
   capability: AgentCapability;
   onSelect: (capability: AgentCapability) => void;
 }) {
-  const className = ["rail-button", capability.tone, capability.status].join(" ");
+  const className = ["rail-button", capability.tone, capability.status, capability.executionMode].join(" ");
+  const title = [
+    capability.prompt,
+    `Mode: ${executionModeLabels[capability.executionMode]}`,
+    `Runtime: ${capability.runtime}`,
+    `Creates job: ${capability.createsJob ? "yes" : "no"}`,
+  ].join("\n");
+
   return (
     <button
       className={className}
       type="button"
       data-agent-id={capability.id}
       onClick={() => onSelect(capability)}
-      title={capability.prompt}
+      title={title}
     >
       {capability.eyebrow ? <span>{capability.eyebrow}</span> : null}
       <strong>{capability.label}</strong>
-      <em>{statusLabels[capability.status]}</em>
+      <em>
+        {statusLabels[capability.status]} · {executionModeLabels[capability.executionMode]}
+      </em>
     </button>
   );
 }
@@ -62,7 +77,11 @@ export function MariaWorkstation() {
   function selectCapability(capability: AgentCapability) {
     setSelectedAgentId(capability.id);
     setPrompt(capability.prompt);
-    setStatus(`${capability.label} selected`);
+    setStatus(
+      `${capability.label} selected · ${executionModeLabels[capability.executionMode]} · ${
+        capability.createsJob ? "job starts only after confirmation" : "no job created by navigation"
+      }`,
+    );
   }
 
   function newSession() {

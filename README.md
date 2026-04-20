@@ -30,12 +30,14 @@ In development, if beta credentials are not configured, the auth gate is bypasse
 ## Architecture
 
 - `app/page.tsx` renders the Maria workstation UI.
-- `config/agents.ts` is the public capability registry.
+- `config/agents.ts` is the agentic capability registry.
 - `app/api/health/route.ts` reports safe deployment health and bridge readiness without exposing secrets.
 - `app/api/maria/chat/route.ts` is the future server-side bridge to Maria in NemoClaw/Brev.
 - `proxy.ts` protects the beta app with server-side Basic Auth.
 - `AGENTIC_ARCHITECTURE.md` defines the Vercel/NVIDIA/Brev/NemoClaw architecture, job rules, output model, and security boundaries.
 - `AGENT_MAP.md` maps the current UI buttons to future agentic capabilities.
+
+The capability registry distinguishes pre-job guidance, job-required workflows, and artifact access. Navigation does not create jobs; operational work does.
 
 Secrets must stay in Vercel environment variables. Do not expose OpenClaw, Brev, NVIDIA, or MCP tokens in browser code.
 

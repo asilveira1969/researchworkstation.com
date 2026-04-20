@@ -4,6 +4,8 @@ This document maps the current workstation buttons to agentic capabilities.
 
 Maria remains the public voice of the platform. Specialized agents, tools, APIs, MCPs, and workflows may operate behind these capabilities, but the user experience should stay unified through Maria unless an expert/debug view is intentionally added later.
 
+The technical source of truth for this map is `config/agents.ts`. That registry exposes each capability's execution mode, runtime, job behavior, expected inputs, expected outputs, tools, and artifact types.
+
 ## Capability States
 
 `live` means available in the current interface.

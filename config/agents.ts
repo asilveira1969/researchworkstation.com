@@ -1,4 +1,6 @@
 export type AgentStatus = "live" | "prepared" | "future";
+export type AgentExecutionMode = "pre_job" | "job_required" | "artifact_access";
+export type AgentRuntime = "maria" | "agent_chain" | "storage" | "future";
 
 export type AgentCapability = {
   id: string;
@@ -7,7 +9,14 @@ export type AgentCapability = {
   group: "left" | "right";
   tone: "primary" | "secondary" | "quiet";
   status: AgentStatus;
+  executionMode: AgentExecutionMode;
+  runtime: AgentRuntime;
+  createsJob: boolean;
   prompt: string;
+  expectedInputs: string[];
+  expectedOutputs: string[];
+  tools: string[];
+  artifactTypes: string[];
 };
 
 export const mariaAgent = {
@@ -27,7 +36,14 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "live",
+    executionMode: "pre_job",
+    runtime: "maria",
+    createsJob: false,
     prompt: "Return to Maria home and explain what this workstation can help me do.",
+    expectedInputs: ["user question", "current context"],
+    expectedOutputs: ["Maria guidance", "workflow options", "next-step suggestions"],
+    tools: ["Maria platform knowledge", "capability registry"],
+    artifactTypes: [],
   },
   {
     id: "secondary-qualitative",
@@ -35,8 +51,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "primary",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Explain the guide and capabilities of Secondary Qualitative Research and help me begin with a clear research question.",
+    expectedInputs: ["topic", "market", "research question", "geographic scope", "decision context"],
+    expectedOutputs: ["research brief", "source plan", "findings", "evidence notes"],
+    tools: ["Maria", "Tavily", "source extraction", "evidence mapping"],
+    artifactTypes: ["brief", "findings", "source_pack", "evidence_map"],
   },
   {
     id: "edgar-database",
@@ -45,8 +68,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Prepare an SEC EDGAR company research workflow. Ask for the company, ticker, filing type, and decision context.",
+    expectedInputs: ["company", "ticker", "filing type", "period", "decision context"],
+    expectedOutputs: ["filing summary", "risk signals", "disclosure evidence", "source pack"],
+    tools: ["SEC EDGAR API", "filing parser", "financial disclosure summarization"],
+    artifactTypes: ["brief", "source_pack", "evidence_map", "findings"],
   },
   {
     id: "world-bank",
@@ -55,8 +85,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Prepare a World Bank macroeconomic research workflow. Ask for country, indicators, period, and market question.",
+    expectedInputs: ["country", "indicators", "time period", "market question"],
+    expectedOutputs: ["indicator table", "macro brief", "chart-ready data", "country context"],
+    tools: ["World Bank API", "data normalization", "indicator comparison"],
+    artifactTypes: ["dataset", "brief", "chart_data", "findings"],
   },
   {
     id: "x-search",
@@ -65,8 +102,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Use X Search to retrieve relevant X/Twitter social signals and summarize them with citations and traceability.",
+    expectedInputs: ["brand", "topic", "company", "time window", "signal type"],
+    expectedOutputs: ["social signal summary", "source list", "sentiment notes", "evidence snippets"],
+    tools: ["X API", "social signal filtering", "sentiment summarization"],
+    artifactTypes: ["social_signal_report", "source_pack", "findings"],
   },
   {
     id: "tavily",
@@ -75,8 +119,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Use Tavily for open web discovery, source collection, and evidence packaging for this research question.",
+    expectedInputs: ["research question", "market", "company", "topic", "source preferences"],
+    expectedOutputs: ["source pack", "evidence summary", "web brief", "ranked sources"],
+    tools: ["Tavily API", "source scoring", "summarization", "citation packaging"],
+    artifactTypes: ["source_pack", "brief", "evidence_map", "findings"],
   },
   {
     id: "one-page-visual-agent",
@@ -85,8 +136,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Create a one-page visual from an existing report. First identify the report and available evidence.",
+    expectedInputs: ["report id", "artifact id", "audience", "visual goal"],
+    expectedOutputs: ["one-page visual", "visual summary", "presentation-ready graphic"],
+    tools: ["report parser", "visual layout agent", "image generation or rendering"],
+    artifactTypes: ["one_page_visual", "image", "slide"],
   },
   {
     id: "secondary-quantitative",
@@ -94,8 +152,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "primary",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Explain Secondary Quantitative Research and help scope data sources, metrics, comparisons, and outputs.",
+    expectedInputs: ["metrics", "market", "geography", "time period", "comparison set"],
+    expectedOutputs: ["data brief", "tables", "chart-ready data", "recommendations"],
+    tools: ["data discovery", "API connectors", "normalization", "analysis"],
+    artifactTypes: ["dataset", "brief", "chart_data", "recommendations"],
   },
   {
     id: "organize-work",
@@ -103,8 +168,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "pre_job",
+    runtime: "maria",
+    createsJob: false,
     prompt:
       "Organize this research into a clean work plan with assumptions, sources, open questions, and deliverables.",
+    expectedInputs: ["goal", "current evidence", "open questions", "deliverable target"],
+    expectedOutputs: ["work plan", "assumptions", "task list", "recommended workflow"],
+    tools: ["Maria planning", "capability registry"],
+    artifactTypes: ["notes", "work_plan"],
   },
   {
     id: "evidence-map",
@@ -112,8 +184,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "left",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Create an evidence map that links each claim, source, confidence level, and missing evidence.",
+    expectedInputs: ["claims", "sources", "findings", "jobId"],
+    expectedOutputs: ["evidence map", "traceability table", "confidence notes"],
+    tools: ["evidence mapping", "citation management", "source scoring"],
+    artifactTypes: ["evidence_map", "source_pack", "findings"],
   },
   {
     id: "exit",
@@ -121,7 +200,14 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "primary",
     status: "prepared",
+    executionMode: "pre_job",
+    runtime: "maria",
+    createsJob: false,
     prompt: "Summarize the session and identify what should be saved before exiting.",
+    expectedInputs: ["session context", "current job", "current artifacts"],
+    expectedOutputs: ["session summary", "save checklist", "next-step reminder"],
+    tools: ["Maria summarization", "future memory tools"],
+    artifactTypes: ["notes"],
   },
   {
     id: "primary-quantitative",
@@ -129,8 +215,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "primary",
     status: "future",
+    executionMode: "job_required",
+    runtime: "future",
+    createsJob: true,
     prompt:
       "Explain Primary Quantitative Research and what information is needed before collecting primary data.",
+    expectedInputs: ["research objective", "sample definition", "survey design", "metrics"],
+    expectedOutputs: ["survey plan", "analysis plan", "primary data findings"],
+    tools: ["future survey tooling", "future data collection", "future analysis workflow"],
+    artifactTypes: ["survey_plan", "dataset", "findings", "recommendations"],
   },
   {
     id: "reporting-intelligence",
@@ -138,8 +231,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "primary",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Help turn current research into findings, recommendations, reports, PDFs, or executive briefs.",
+    expectedInputs: ["findings", "evidence", "audience", "format", "decision context"],
+    expectedOutputs: ["executive brief", "report", "PDF", "recommendations"],
+    tools: ["reporting agent", "PDF generation", "evidence map", "executive synthesis"],
+    artifactTypes: ["report", "pdf", "brief", "recommendations"],
   },
   {
     id: "library",
@@ -147,8 +247,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "artifact_access",
+    runtime: "storage",
+    createsJob: false,
     prompt:
       "Switch into library mode and identify the most relevant documents, reports, and source materials.",
+    expectedInputs: ["jobId", "project", "artifact type", "search filters"],
+    expectedOutputs: ["artifact list", "document references", "download links"],
+    tools: ["future durable storage", "artifact index"],
+    artifactTypes: ["report", "pdf", "one_page_visual", "source_pack", "dataset", "notes"],
   },
   {
     id: "pdf-downloads",
@@ -156,8 +263,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "artifact_access",
+    runtime: "storage",
+    createsJob: false,
     prompt:
       "Show available PDF report outputs. If none are connected yet, explain how this library will work.",
+    expectedInputs: ["jobId", "project", "report type"],
+    expectedOutputs: ["PDF list", "download links", "report metadata"],
+    tools: ["future durable storage", "PDF artifact index"],
+    artifactTypes: ["pdf", "report"],
   },
   {
     id: "one-page-visuals",
@@ -165,8 +279,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "artifact_access",
+    runtime: "storage",
+    createsJob: false,
     prompt:
       "Show available one-page visuals. If none are connected yet, explain how this library will work.",
+    expectedInputs: ["jobId", "project", "visual type"],
+    expectedOutputs: ["visual list", "image downloads", "slide downloads"],
+    tools: ["future durable storage", "visual artifact index"],
+    artifactTypes: ["one_page_visual", "image", "slide"],
   },
   {
     id: "findings",
@@ -174,8 +295,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Turn the current evidence into a short findings section with the most decision-relevant points.",
+    expectedInputs: ["jobId", "evidence set", "research topic", "confidence threshold"],
+    expectedOutputs: ["findings list", "confidence notes", "evidence references"],
+    tools: ["findings extraction", "evidence scoring", "Maria synthesis"],
+    artifactTypes: ["findings", "evidence_map"],
   },
   {
     id: "primary-qualitative",
@@ -183,8 +311,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "primary",
     status: "future",
+    executionMode: "job_required",
+    runtime: "future",
+    createsJob: true,
     prompt:
       "Explain Primary Qualitative Research and help design interviews, surveys, or field discovery.",
+    expectedInputs: ["audience", "interview goals", "questions", "research constraints"],
+    expectedOutputs: ["interview guide", "qualitative plan", "theme analysis"],
+    tools: ["future interview workflow", "future qualitative analysis"],
+    artifactTypes: ["interview_guide", "qualitative_plan", "findings"],
   },
   {
     id: "recommendations",
@@ -192,8 +327,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "job_required",
+    runtime: "agent_chain",
+    createsJob: true,
     prompt:
       "Draft practical recommendations grounded in the current findings and confidence level.",
+    expectedInputs: ["findings", "constraints", "decision context", "confidence level"],
+    expectedOutputs: ["recommendations", "next steps", "decision guidance"],
+    tools: ["recommendation synthesis", "evidence validation", "Maria"],
+    artifactTypes: ["recommendations", "brief"],
   },
   {
     id: "reset-draft",
@@ -201,8 +343,15 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "pre_job",
+    runtime: "maria",
+    createsJob: false,
     prompt:
       "Clear the current draft and restart the task with a simpler prompt and cleaner assumptions.",
+    expectedInputs: ["current draft", "user confirmation"],
+    expectedOutputs: ["clean prompt", "reset state", "simplified assumptions"],
+    tools: ["Maria drafting"],
+    artifactTypes: [],
   },
   {
     id: "maria-notes",
@@ -210,11 +359,22 @@ export const agentCapabilities: AgentCapability[] = [
     group: "right",
     tone: "quiet",
     status: "prepared",
+    executionMode: "pre_job",
+    runtime: "maria",
+    createsJob: false,
     prompt:
       "Summarize what Maria has done so far, assumptions in play, and the next best prompt.",
+    expectedInputs: ["session context", "jobId", "current artifacts"],
+    expectedOutputs: ["session notes", "memory candidates", "next prompt"],
+    tools: ["Maria summarization", "future memory tools"],
+    artifactTypes: ["notes"],
   },
 ];
 
 export function getCapabilitiesByGroup(group: AgentCapability["group"]) {
   return agentCapabilities.filter((capability) => capability.group === group);
+}
+
+export function getCapabilityById(id: string) {
+  return agentCapabilities.find((capability) => capability.id === id);
 }
