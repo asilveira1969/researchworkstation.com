@@ -1,6 +1,6 @@
 # Research Workstation v2 - Project Status
 
-Last updated: 2026-04-19
+Last updated: 2026-04-20
 
 ## Current State
 
@@ -12,6 +12,7 @@ The app currently provides:
 - A configurable agent/capability registry.
 - Placeholder server-side API routes for Maria, agents, and artifacts.
 - A safe `/api/health` endpoint for deployment checks without exposing secrets.
+- Master documentation for the agentic architecture and capability map.
 - A Vercel preview deployment for safe online testing.
 - Persistent Vercel environment variables for the temporary `vercel.app` production deployment.
 
@@ -39,6 +40,13 @@ Local URL:
 
 ```text
 http://127.0.0.1:3000
+```
+
+Architecture docs:
+
+```text
+AGENTIC_ARCHITECTURE.md
+AGENT_MAP.md
 ```
 
 ## Vercel Preview
@@ -116,6 +124,7 @@ Vercel preview:
 - `/api/agents/registry` responds behind login.
 - `/api/maria/chat` responds with safe placeholder behavior behind login.
 - `/api/health` reports deployment state without exposing tokens.
+- Agentic architecture docs exist and contain no secrets.
 - `.env.local` is not exposed.
 
 Latest Vercel redeploy:
@@ -143,6 +152,7 @@ dc1e8cf Record main branch status
 
 Recommended order:
 - Review the Vercel preview visually.
+- Use `AGENTIC_ARCHITECTURE.md` and `AGENT_MAP.md` as the source of truth before adding real agents, tools, workflows, storage, or Maria bridge behavior.
 - Improve responsive layout and workstation fidelity if needed.
 - Replace beta password with a stronger private value before production.
 - Keep GitHub updated after each safe milestone.

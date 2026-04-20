@@ -6,6 +6,8 @@ This project recreates the Maria workstation experience from the local OpenClaw 
 
 Current operational notes live in [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).
 
+The agentic architecture is documented in [`AGENTIC_ARCHITECTURE.md`](./AGENTIC_ARCHITECTURE.md), with the current capability map in [`AGENT_MAP.md`](./AGENT_MAP.md).
+
 ## Local Development
 
 1. Copy `.env.example` to `.env.local`.
@@ -32,6 +34,8 @@ In development, if beta credentials are not configured, the auth gate is bypasse
 - `app/api/health/route.ts` reports safe deployment health and bridge readiness without exposing secrets.
 - `app/api/maria/chat/route.ts` is the future server-side bridge to Maria in NemoClaw/Brev.
 - `proxy.ts` protects the beta app with server-side Basic Auth.
+- `AGENTIC_ARCHITECTURE.md` defines the Vercel/NVIDIA/Brev/NemoClaw architecture, job rules, output model, and security boundaries.
+- `AGENT_MAP.md` maps the current UI buttons to future agentic capabilities.
 
 Secrets must stay in Vercel environment variables. Do not expose OpenClaw, Brev, NVIDIA, or MCP tokens in browser code.
 
